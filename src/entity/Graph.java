@@ -10,7 +10,7 @@ import java.util.Set;
 public class Graph {
 	private int numberOFVertices;
 	private Map<Integer, List<Integer>> vertices = new HashMap<Integer, List<Integer>>();
-	private List<Integer> edges = new ArrayList<>();
+	private List<Edge> edges = new ArrayList<>();
 
 	public Graph(int numberOFVertices) {
 		for (int index = 0; index < numberOFVertices; index++) {
@@ -20,11 +20,11 @@ public class Graph {
 		}
 	}
 
-	public List<Integer> getEdges() {
+	public List<Edge> getEdges() {
 		return edges;
 	}
 
-	public void setEdges(List<Integer> edges) {
+	public void setEdges(List<Edge> edges) {
 		this.edges = edges;
 	}
 
@@ -32,19 +32,19 @@ public class Graph {
 		return numberOFVertices;
 	}
 
-	public Set<Integer> parseX() {
+	public Set<Integer> parseVertices() {
+		//returns a set with all the vertices
 		return this.vertices.keySet();
 
 	}
 
 	public List<Integer> parseNout(int x) {
-		// Returns an iterable containing the outbound neighbours of x
+		// Returns an iterable list with the outbound neighbours of x
 		return this.vertices.get(x);
 	}
 
 	public List<Integer> parseNin(int x) {
-		// Returns an iterable containing the inbound neighbours of x
-
+		// Returns an iterable list with the inbound neighbours of x
 		List<Integer> inbound = new ArrayList<>();
 
 		for (int i = 0; i < this.vertices.size(); i++) {
@@ -68,7 +68,7 @@ public class Graph {
 	public void addEdge(int firstVertex, int secondVertex) {
 		if (!this.isEdge(firstVertex, secondVertex)) {
 			this.vertices.get(firstVertex).add(secondVertex);
-
+			this.edges.add(new Edge(firstVertex,secondVertex,0));
 		}
 
 	}
@@ -78,7 +78,7 @@ public class Graph {
 	}
 
 	public Set<Integer> accessible(int startVertex) {
-
+		//returns a set with all the vertices accessible from the vertex startVertex
 		Set<Integer> accessible = new HashSet<Integer>();
 		accessible.add(startVertex);
 		List<Integer> list = new ArrayList<>();
@@ -112,4 +112,22 @@ public class Graph {
 
 	}
 
+	public Graph copyGraph(Graph graph) {
+		graph.setNumberOFVertices(this.getNumberOFVertices());
+		graph.setEdges(this.getEdges());
+		graph.setVertices(this.getVertices());
+		return graph;
+
+	}
+
+	public void removeVertex(int vertex){
+		vertices.remove(vertex);
+		setNumberOFVertices(getNumberOFVertices() - 1);
+		List<Edge> newList = getEdges();
+		for(Edge edge: newList){
+			if(edge.getFirstVertice() == vertex){
+				newList.remove(edge);
+			}
+		}
+	}
 }
